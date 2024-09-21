@@ -1,2 +1,2 @@
-# M-todos-Nunericos-2025-1
+# Metodos-Numericos-2025-1
 Programas de Métodos ;)))
