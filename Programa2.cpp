@@ -59,9 +59,49 @@ int main() {
 
 // Función para leer la matriz y el vector independiente
 void leerMatriz() {
-    // Pide las dimensiones, lee la matriz y el vector independiente
-    // Preguntar si los datos son correctos
-    printf("Test\n");
+    int n;
+    char resp;
+
+    printf("Ingrese el tamaño de la matriz (n x n): ");
+    scanf("%d", &n);
+
+    double matriz[n][n];
+    double vector[n];
+
+    printf("Ingrese los elementos de la matriz:\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            printf("Elemento [%d][%d]: ", i, j);
+            scanf("%lf", &matriz[i][j]);
+        }
+    }
+
+    printf("Ingrese los elementos del vector independiente:\n");
+    for (int i = 0; i < n; i++) {
+        printf("Elemento [%d]: ", i);
+        scanf("%lf", &vector[i]);
+    }
+
+    printf("Matriz ingresada:\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            printf("%lf ", matriz[i][j]);
+        }
+        printf("\n");
+    }
+
+    printf("Vector independiente ingresado:\n");
+    for (int i = 0; i < n; i++) {
+        printf("%lf ", vector[i]);
+    }
+    printf("\n");
+
+    //Preguntar si es correcta la matriz
+    printf("¿Es correcta la matriz? (s/n): ");
+    scanf(" %c", &resp);
+    if(resp == 'n' || resp == 'N') {
+        corregirCoeficiente();
+    }
 }
 
 // Función para corregir un coeficiente de la matriz
