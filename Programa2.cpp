@@ -1,8 +1,9 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 void leerMatriz();
-void corregirCoeficiente();
-void calcularDeterminante();
+void corregirCoeficiente(double **matriz,int n);
+void calcularDeterminante(double **matriz, int n);
 void verificarDominanciaDiagonal();
 void triangularMatriz();
 void resolverSistema();
@@ -28,10 +29,10 @@ int main() {
                 leerMatriz();
                 break;
             case 2:
-                corregirCoeficiente();
+                //corregirCoeficiente();
                 break;
             case 3:
-                calcularDeterminante();
+                //calcularDeterminante();
                 break;
             case 4:
                 verificarDominanciaDiagonal();
@@ -58,15 +59,19 @@ int main() {
 }
 
 // Función para leer la matriz y el vector independiente
-void leerMatriz() {
+void leerMatriz(double **matrix) {
     int n;
     char resp;
 
     printf("Ingrese el tamaño de la matriz (n x n): ");
     scanf("%d", &n);
 
-    double matriz[n][n];
-    double vector[n];
+    // Allocate memory dynamically for the matrix and vector
+    double** matriz = (double**)malloc(n * sizeof(double*));
+    for (int i = 0; i < n; i++) {
+        matriz[i] = (double*)malloc(n * sizeof(double));
+    }
+    double* vector = (double*)malloc(n * sizeof(double));
 
     printf("Ingrese los elementos de la matriz:\n");
     for (int i = 0; i < n; i++) {
@@ -96,24 +101,61 @@ void leerMatriz() {
     }
     printf("\n");
 
-    //Preguntar si es correcta la matriz
+    matrix = matriz;
+
+    // Preguntar si es correcta la matriz
     printf("¿Es correcta la matriz? (s/n): ");
     scanf(" %c", &resp);
-    if(resp == 'n' || resp == 'N') {
-        corregirCoeficiente();
+    if (resp == 'n' || resp == 'N') {
+        corregirCoeficiente(matrix,n);
     }
 }
 
 // Función para corregir un coeficiente de la matriz
-void corregirCoeficiente() {
-    // Pedir renglón y columna para corregir el coeficiente específico
-    printf("Test\n");
+void corregirCoeficiente(double **matriz,int n) {
+    int fila, columna;
+    double nuevoValor;
+
+    printf("Introduce el numero de fila (1 a %d): ", n);
+    scanf("%d", &fila);
+    printf("Introduce el número de columna (1 a %d): ", n);
+    scanf("%d", &columna);
+    
+    printf("Introduce el nuevo valor para la posición [%d][%d]: ", fila, columna);
+    scanf("%lf", &nuevoValor);
+    
+    matriz[fila-1][columna-1] = nuevoValor;
+    printf("Coeficiente corregido correctamente.\n");
+
+    char confirmacion;
+    printf("¿Son correctos los datos ahora? (s/n): ");
+    scanf(" %c", &confirmacion);
+    
+    if (confirmacion == 'n' || confirmacion == 'N') 
+    {
+        corregirCoeficiente(matriz,n);
+    }
 }
 
 // Función para calcular el determinante de la matriz
-void calcularDeterminante() {
-    // Proporcionar el determinante una vez leída y corregida la matriz
-    printf("Test\n");
+void calcularDeterminante(double **matriz, int n) {
+
+    double determinante = 1;
+    for (int i = 0; i < n; i++) {
+        if (matriz[i][i] == 0) {
+            printf("El determinante es 0\n");
+            return;
+        }
+        for (int j = i + 1; j < n; j++) {
+            double factor = matriz[j][i] / matriz[i][i];
+            for (int k = i; k < n; k++) {
+                matriz[j][k] -= factor * matriz[i][k];
+            }
+        }
+        determinante *= matriz[i][i];
+    }
+
+    printf("El determinante de la matriz es: %lf\n", determinante);
 }
 
 // Función para verificar si la matriz es diagonalmente dominante
