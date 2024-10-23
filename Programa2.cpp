@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void leerMatriz();
-void corregirCoeficiente(double **matriz,int n);
-void calcularDeterminante(double **matriz, int n);
+void leerMatriz(double **);
+void corregirCoeficiente(double **,int);
+void calcularDeterminante(double **, int);
 void verificarDominanciaDiagonal();
 void triangularMatriz();
 void resolverSistema();
@@ -11,6 +11,7 @@ int verificarSiHaySolucion();
 
 int main() {
     int opcion;
+    double **matriz;
     
     do {
         printf("\nPrograma 2");
@@ -26,7 +27,7 @@ int main() {
         
         switch(opcion) {
             case 1:
-                leerMatriz();
+                leerMatriz(matriz);
                 break;
             case 2:
                 //corregirCoeficiente();
@@ -76,7 +77,7 @@ void leerMatriz(double **matrix) {
     printf("Ingrese los elementos de la matriz:\n");
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            printf("Elemento [%d][%d]: ", i, j);
+            printf("Elemento [%d][%d]: ", i+1, j+1);
             scanf("%lf", &matriz[i][j]);
         }
     }
@@ -134,6 +135,14 @@ void corregirCoeficiente(double **matriz,int n) {
     if (confirmacion == 'n' || confirmacion == 'N') 
     {
         corregirCoeficiente(matriz,n);
+    }else{
+        printf("Matriz ingresada:\n");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                printf("%lf ", matriz[i][j]);
+            }
+            printf("\n");
+        }
     }
 }
 
