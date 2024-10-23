@@ -66,8 +66,29 @@ void leerMatriz() {
 
 // Función para corregir un coeficiente de la matriz
 void corregirCoeficiente() {
-    // Pedir renglón y columna para corregir el coeficiente específico
-    printf("Test\n");
+    void corregirCoeficiente() {
+    int fila, columna;
+    double nuevoValor;
+
+    printf("Introduce el numero de fila (1 a %d): ", n);
+    scanf("%d", &fila);
+    printf("Introduce el número de columna (1 a %d): ", n);
+    scanf("%d", &columna);
+    
+    printf("Introduce el nuevo valor para la posición [%d][%d]: ", fila, columna);
+    scanf("%lf", &nuevoValor);
+    
+    matriz[fila-1][columna-1] = nuevoValor;
+    printf("Coeficiente corregido correctamente.\n");
+
+    char confirmacion;
+    printf("¿Son correctos los datos ahora? (s/n): ");
+    scanf(" %c", &confirmacion);
+    
+    if (confirmacion == 'n' || confirmacion == 'N') 
+    {
+        corregirCoeficiente();
+    }
 }
 
 // Función para calcular el determinante de la matriz
