@@ -84,7 +84,7 @@ void leerMatriz(double **matrix) {
 
     printf("Ingrese los elementos del vector independiente:\n");
     for (int i = 0; i < n; i++) {
-        printf("Elemento [%d]: ", i);
+        printf("Elemento [%d]: ", i+1);
         scanf("%lf", &vector[i]);
     }
 
