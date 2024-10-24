@@ -59,9 +59,46 @@ int main() {
 
 // Función para leer la matriz y el vector independiente
 void leerMatriz() {
-    // Pide las dimensiones, lee la matriz y el vector independiente
-    // Preguntar si los datos son correctos
-    printf("Test\n");
+  // Solicitar el tamaño de la matriz
+    printf("Introduce el tamaño de la matriz (n x n): ");
+    scanf("%d", &n);
+    
+    // Verificar que el tamaño sea válido
+    if (n > MAX_SIZE || n <= 0) {
+        printf("Error: El tamaño de la matriz debe estar entre 1 y %d.\n", MAX_SIZE);
+        return;
+    }
+
+    // Leer los elementos de la matriz
+    printf("Introduce los elementos de la matriz de coeficientes:\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            printf("Elemento [%d][%d]: ", i+1, j+1);
+            scanf("%lf", &matriz[i][j]);
+        }
+    }
+
+    // Leer los elementos del vector independiente
+    printf("Introduce los elementos del vector independiente:\n");
+    for (int i = 0; i < n; i++) {
+        printf("Elemento [%d]: ", i+1);
+        scanf("%lf", &vector[i]);
+    }
+
+    // Mostrar la matriz y el vector para confirmación
+    printf("\nMatriz ingresada:\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            printf("%.2lf ", matriz[i][j]);
+        }
+        printf("\n");
+    }
+
+    printf("\nVector independiente ingresado:\n");
+    for (int i = 0; i < n; i++) {
+        printf("%.2lf ", vector[i]);
+    }
+    printf("\n");
 }
 
 // Función para corregir un coeficiente de la matriz
