@@ -1,5 +1,8 @@
 #include <stdio.h>
-
+#define MAX_SIZE 10
+int n; 
+double matriz[MAX_SIZE][MAX_SIZE]; 
+double vector[MAX_SIZE];
 void leerMatriz();
 void corregirCoeficiente();
 void calcularDeterminante();
