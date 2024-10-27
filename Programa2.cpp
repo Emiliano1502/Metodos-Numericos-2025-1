@@ -1,78 +1,47 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 #define MAX_SIZE 10
-int n; 
-double matriz[MAX_SIZE][MAX_SIZE]; 
+
+int n;
+double matriz[MAX_SIZE][MAX_SIZE];
 double vector[MAX_SIZE];
+int esDominante = 1;
+
 void leerMatriz();
 void corregirCoeficiente();
-void calcularDeterminante();
+void mostrarMatrizYVector();
+double calcularDeterminante(double mat[MAX_SIZE][MAX_SIZE], int orden);
 void verificarDominanciaDiagonal();
 void triangularMatriz();
 void resolverSistema();
-int verificarSiHaySolucion();
 
 int main() {
-    int opcion;
+    leerMatriz();  // Lee la matriz y el vector
     
-    do {
-        printf("\nPrograma 2");
-        printf("\n1. Lectura de la matriz");
-        printf("\n2. Corregir coeficiente de la matriz");
-        printf("\n3. Calcular determinante de la matriz");
-        printf("\n4. Verificar si la matriz es diagonalmente dominante");
-        printf("\n5. Triangular matriz");
-        printf("\n6. Resolver el sistema de ecuaciones");
-        printf("\n7. Salir");
-        printf("\nSeleccione una opción: ");
-        scanf("%d", &opcion);
-        
-        switch(opcion) {
-            case 1:
-                leerMatriz();
-                break;
-            case 2:
-                corregirCoeficiente();
-                break;
-            case 3:
-                calcularDeterminante();
-                break;
-            case 4:
-                verificarDominanciaDiagonal();
-                break;
-            case 5:
-                triangularMatriz();
-                break;
-            case 6:
-                if (verificarSiHaySolucion()) {
-                    resolverSistema();
-                } else {
-                    printf("El sistema asociado no tiene solución.\n");
-                }
-                break;
-            case 7:
-                printf("Saliendo del programa...\n");
-                break;
-            default:
-                printf("Opción no válida, intente nuevamente.\n");
-        }
-    } while(opcion != 7);
+    double determinante = calcularDeterminante(matriz, n);
+    printf("Determinante de la matriz: %.2lf\n", determinante);
     
+	verificarDominanciaDiagonal();
+
+    if (!esDominante) {
+        triangularMatriz();  // Triangular la matriz si no es dominante
+    }
+    
+    if (determinante != 0) {
+        printf("El determinante es distinto de cero. Resolvamos el sistema:\n");
+        resolverSistema();
+    } else {
+        printf("El sistema asociado no tiene solucion.\n");
+    }
+    system ("pause");
     return 0;
 }
 
 // Función para leer la matriz y el vector independiente
 void leerMatriz() {
-  // Solicitar el tamaño de la matriz
-    printf("Introduce el tamaño de la matriz (n x n): ");
+    printf("Introduce el tama%co de la matriz (n x n): ",164);
     scanf("%d", &n);
-    
-    // Verificar que el tamaño sea válido
-    if (n > MAX_SIZE || n <= 0) {
-        printf("Error: El tamaño de la matriz debe estar entre 1 y %d.\n", MAX_SIZE);
-        return;
-    }
-
-    // Leer los elementos de la matriz
     printf("Introduce los elementos de la matriz de coeficientes:\n");
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
@@ -81,83 +50,147 @@ void leerMatriz() {
         }
     }
 
-    // Leer los elementos del vector independiente
     printf("Introduce los elementos del vector independiente:\n");
     for (int i = 0; i < n; i++) {
         printf("Elemento [%d]: ", i+1);
         scanf("%lf", &vector[i]);
     }
 
-    // Mostrar la matriz y el vector para confirmación
-    printf("\nMatriz ingresada:\n");
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            printf("%.2lf ", matriz[i][j]);
-        }
-        printf("\n");
-    }
-
-    printf("\nVector independiente ingresado:\n");
-    for (int i = 0; i < n; i++) {
-        printf("%.2lf ", vector[i]);
-    }
-    printf("\n");
-}
-
-// Función para corregir un coeficiente de la matriz
-void corregirCoeficiente() {
-    void corregirCoeficiente() {
-    int fila, columna;
-    double nuevoValor;
-
-    printf("Introduce el numero de fila (1 a %d): ", n);
-    scanf("%d", &fila);
-    printf("Introduce el número de columna (1 a %d): ", n);
-    scanf("%d", &columna);
-    
-    printf("Introduce el nuevo valor para la posición [%d][%d]: ", fila, columna);
-    scanf("%lf", &nuevoValor);
-    
-    matriz[fila-1][columna-1] = nuevoValor;
-    printf("Coeficiente corregido correctamente.\n");
+    printf("\nMatriz y vector ingresados:\n");
+    mostrarMatrizYVector();
 
     char confirmacion;
-    printf("¿Son correctos los datos ahora? (s/n): ");
+    printf("%c Son correctos los datos ingresados? (s/n): ",168);
     scanf(" %c", &confirmacion);
-    
-    if (confirmacion == 'n' || confirmacion == 'N') 
-    {
+
+    if (confirmacion == 'n' || confirmacion == 'N') {
         corregirCoeficiente();
     }
 }
 
-// Función para calcular el determinante de la matriz
-void calcularDeterminante() {
-    // Proporcionar el determinante una vez leída y corregida la matriz
-    printf("Test\n");
+// Función para corregir un coeficiente de la matriz
+void corregirCoeficiente() {
+    int fila, columna;
+    double nuevoValor;
+    printf("Introduce el numero de fila (1 a %d): ", n);
+    scanf("%d", &fila);
+    printf("Introduce el numero de columna (1 a %d): ", n);
+    scanf("%d", &columna);
+    
+    if (fila > 0 && fila <= n && columna > 0 && columna <= n) {
+        printf("Introduce el nuevo valor para la posicion [%d][%d]: ", fila, columna);
+        scanf("%lf", &nuevoValor);
+        matriz[fila-1][columna-1] = nuevoValor;
+        printf("Coeficiente corregido correctamente.\n");
+
+        printf("\nMatriz y vector actualizados:\n");
+        mostrarMatrizYVector();
+    } else {
+        printf("Error: Fila o columna fuera de rango.\n");
+        corregirCoeficiente();
+        return;
+    }
+
+    char confirmacion;
+    printf("%c Son correctos los datos ahora? (s/n): ",168);
+    scanf(" %c", &confirmacion);
+    
+    if (confirmacion == 'n' || confirmacion == 'N') {
+        corregirCoeficiente();
+    }
+}
+
+// Función para mostrar la matriz y el vector en formato de tabla
+void mostrarMatrizYVector() {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            printf("%.2lf\t", matriz[i][j]);
+        }
+        printf("|\t%.2lf\n", vector[i]);  // Mostrar el vector al lado de la matriz
+    }
+    printf("\n");
+}
+
+// Función para calcular el determinante 
+double calcularDeterminante(double mat[MAX_SIZE][MAX_SIZE], int orden) {
+    if (orden == 1) {
+        return mat[0][0];
+    }
+    if (orden == 2) {
+        return mat[0][0] * mat[1][1] - mat[0][1] * mat[1][0];
+    }
+    
+    double determinante = 0;
+    double submat[MAX_SIZE][MAX_SIZE];
+    
+    for (int x = 0; x < orden; x++) {
+        int subi = 0;
+        for (int i = 1; i < orden; i++) {
+            int subj = 0;
+            for (int j = 0; j < orden; j++) {
+                if (j == x) continue;
+                submat[subi][subj] = mat[i][j];
+                subj++;
+            }
+            subi++;
+        }
+        determinante += (x % 2 == 0 ? 1 : -1) * mat[0][x] * calcularDeterminante(submat, orden - 1);
+    }
+    return determinante;
 }
 
 // Función para verificar si la matriz es diagonalmente dominante
 void verificarDominanciaDiagonal() {
-    // Verificar si la matriz es diagonalmente dominante
-    printf("Test\n");
+    esDominante = 1;
+    
+    for (int i = 0; i < n; i++) {
+        double suma = 0;
+        for (int j = 0; j < n; j++) {
+            if (i != j) {
+                suma += fabs(matriz[i][j]);
+            }
+        }
+        if (fabs(matriz[i][i]) < suma) {
+            esDominante = 0;
+            break;
+        }
+    }
+    
+    if (esDominante) {
+        printf("La matriz es diagonalmente dominante.\n");
+    } else {
+        printf("La matriz NO es diagonalmente dominante.\n");
+		printf("Se triangularizara para calcular el determinante.\n");
+    }
 }
 
-// Función para triangular la matriz si no es diagonalmente dominante
+// Función para triangularizar la matriz
 void triangularMatriz() {
-    // Triangular la matriz
-    printf("Test\n");
+    for (int k = 0; k < n - 1; k++) {
+        for (int i = k + 1; i < n; i++) {
+            double factor = matriz[i][k] / matriz[k][k];
+            for (int j = k; j < n; j++) {
+                matriz[i][j] -= factor * matriz[k][j];
+            }
+            vector[i] -= factor * vector[k];
+        }
+    }
+    printf("La matriz ha sido triangularizada.\n");
 }
-
-// Función para resolver el sistema de ecuaciones
+// Función para resolver el sistema de ecuaciones usando sustitución hacia atrás
 void resolverSistema() {
-    // Resolver el sistema de ecuaciones
-    printf("Test\n");
+	printf("Proximamente \n");}
+
+// Función para verificar si el sistema tiene solución (determinante no nulo)
+int verificarSiHaySolucion() {
+    double det = calcularDeterminante(matriz, n);
+    if (det != 0){
+    void resolverSistema();
+    }
+    else
+    {
+    printf("El sistema no tiene solucion");
+    }
+return 0;
 }
 
-// Función para verificar si el sistema tiene solución
-int verificarSiHaySolucion() {
-    // Retornar 1 si tiene solución, 0 si no
-    printf("Test\n");
-    return 1; 
-}
