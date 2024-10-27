@@ -17,6 +17,7 @@ void triangularMatriz();
 void resolverSistema();
 
 int main() {
+	printf("Programa 2\n Moreno Vigueras Arturo Tadeo\n Ruiz Garcia Emiliano\n Segura Loera Carlos Emiliano\n Moctezuma Ramirez Diego Rafael\n");
     leerMatriz();  // Lee la matriz y el vector
     
     double determinante = calcularDeterminante(matriz, n);
