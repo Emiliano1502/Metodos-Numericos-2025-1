@@ -6,6 +6,7 @@
 
 int n;
 double matriz[MAX_SIZE][MAX_SIZE];
+double inversa[MAX_SIZE][MAX_SIZE];
 double vector[MAX_SIZE];
 int esDominante = 1;
 
@@ -17,6 +18,7 @@ void verificarDominanciaDiagonal();
 void triangularMatriz();
 void resolverSistema();
 void resolverPorJacobi();
+void inversaMatriz();
 void calcularValoresYVectoresPropios();
 
 int main() {
@@ -238,6 +240,47 @@ void resolverPorJacobi() {
     printf("El método de Jacobi no converge después de %d iteraciones.\n", MAX_ITERACIONES);
 }
 
+void inversaMatriz(){
+    double temp[MAX_SIZE][MAX_SIZE];
+    int i, j, k;
+
+    // Inicializar la matriz inversa como la matriz identidad
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            if (i == j) {
+                inversa[i][j] = 1.0;
+            } else {
+                inversa[i][j] = 0.0;
+            }
+            temp[i][j] = matriz[i][j];
+        }
+    }
+
+    // Aplicar eliminación gaussiana
+    for (i = 0; i < n; i++) {
+        double pivote = temp[i][i];
+        if (pivote == 0) {
+            printf("La matriz no es invertible.\n");
+            return;
+        }
+
+        for (j = 0; j < n; j++) {
+            temp[i][j] /= pivote;
+            inversa[i][j] /= pivote;
+        }
+
+        for (k = 0; k < n; k++) {
+            if (k != i) {
+                double factor = temp[k][i];
+                for (j = 0; j < n; j++) {
+                    temp[k][j] -= factor * temp[i][j];
+                    inversa[k][j] -= factor * inversa[i][j];
+                }
+            }
+        }
+    }
+}
+
 void calcularValoresYVectoresPropios() {
     double vectorInicial[MAX_SIZE] = {1};
     double vectorNuevo[MAX_SIZE] = {0};
@@ -249,6 +292,7 @@ void calcularValoresYVectoresPropios() {
     printf("Introduce la tolerancia: ");
     scanf("%lf", &tolerancia);
 
+    // Valor propio dominante
     for (k = 0; k < iteraciones; k++) {
         for (i = 0; i < n; i++) {
             vectorNuevo[i] = 0;
@@ -257,32 +301,78 @@ void calcularValoresYVectoresPropios() {
             }
         }
 
-            lambdaNuevo = fabs(vectorNuevo[0]);
-            for (i = 1; i < n; i++) {
-                if (fabs(vectorNuevo[i]) > lambdaNuevo) {
-                    lambdaNuevo = fabs(vectorNuevo[i]);
-                }
+        lambdaNuevo = fabs(vectorNuevo[0]);
+        for (i = 1; i < n; i++) {
+            if (fabs(vectorNuevo[i]) > lambdaNuevo) {
+                lambdaNuevo = fabs(vectorNuevo[i]);
             }
+        }
 
-            for (i = 0; i < n; i++) {
-                vectorNuevo[i] /= lambdaNuevo;
-            }
+        for (i = 0; i < n; i++) {
+            vectorNuevo[i] /= lambdaNuevo;
+        }
 
-            if (fabs(lambdaNuevo - lambdaAnterior) < tolerancia) {
-                printf("\nConvergencia alcanzada en %d iteraciones.\n", k + 1);
-                break;
-            }
+        if (fabs(lambdaNuevo - lambdaAnterior) < tolerancia) {
+            printf("\nConvergencia alcanzada en %d iteraciones.\n", k + 1);
+            break;
+        }
 
-            for (i = 0; i < n; i++) {
-                vectorInicial[i] = vectorNuevo[i];
-            }
+        for (i = 0; i < n; i++) {
+            vectorInicial[i] = vectorNuevo[i];
+        }
 
-            lambdaAnterior = lambdaNuevo;
-            }
+        lambdaAnterior = lambdaNuevo;
+    }
 
-            printf("\nValor propio dominante: %.6lf\n", lambdaNuevo);
-            printf("Vector propio asociado:\n");
-            for (i = 0; i < n; i++) {
-            printf("x%d = %.6lf\n", i + 1, vectorNuevo[i]);
+    printf("\nValor propio dominante: %.6lf\n", lambdaNuevo);
+    printf("Vector propio asociado:\n");
+    for (i = 0; i < n; i++) {
+        printf("x%d = %.6lf\n", i + 1, vectorNuevo[i]);
+    }
+
+    // Valor propio mínimo
+    inversaMatriz();
+    for (i = 0; i < n; i++) {
+        vectorInicial[i] = 1;
+        vectorNuevo[i] = 0;
+    }
+    lambdaAnterior = 0;
+    lambdaNuevo = 0;
+
+    for (k = 0; k < iteraciones; k++) {
+        for (i = 0; i < n; i++) {
+            vectorNuevo[i] = 0;
+            for (j = 0; j < n; j++) {
+                vectorNuevo[i] += inversa[i][j] * vectorInicial[j];
             }
+        }
+
+        lambdaNuevo = fabs(vectorNuevo[0]);
+        for (i = 1; i < n; i++) {
+            if (fabs(vectorNuevo[i]) > lambdaNuevo) {
+                lambdaNuevo = fabs(vectorNuevo[i]);
             }
+        }
+
+        for (i = 0; i < n; i++) {
+            vectorNuevo[i] /= lambdaNuevo;
+        }
+
+        if (fabs(lambdaNuevo - lambdaAnterior) < tolerancia) {
+            printf("\nConvergencia alcanzada en %d iteraciones.\n", k + 1);
+            break;
+        }
+
+        for (i = 0; i < n; i++) {
+            vectorInicial[i] = vectorNuevo[i];
+        }
+
+        lambdaAnterior = lambdaNuevo;
+    }
+
+    printf("\nValor propio mínimo: %.6lf\n", 1 / lambdaNuevo);
+    printf("Vector propio asociado:\n");
+    for (i = 0; i < n; i++) {
+        printf("x%d = %.6lf\n", i + 1, vectorNuevo[i]);
+    }
+}
