@@ -3,6 +3,7 @@
 #include <cmath>
 #include <stdio.h>
 #include <stdlib.h>
+#include <wchar.h>
 #define MAX_SIZE 10
 #define MAX_ITERACIONES 100
 
