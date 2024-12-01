@@ -257,6 +257,10 @@ int main() {
             } else {
                 cout << "Método inválido.\n";
             }
+            // Pausa para que el usuario pueda ver los resultados
+            cout << "Presione Enter para continuar...";
+            cin.ignore(); // Limpia el buffer de entrada
+            cin.get();    // Espera a que el usuario presione Enter
             break;
         }
         case 2: {
