@@ -308,7 +308,7 @@ int main() {
 cout << "Presione Enter para continuar...";
             cin.ignore();
             cin.get();
-            break;
+            
     return 0;
 }
 
