@@ -282,96 +282,107 @@ void inversaMatriz(){
 }
 
 void calcularValoresYVectoresPropios() {
-    double vectorInicial[MAX_SIZE] = {1};
-    double vectorNuevo[MAX_SIZE] = {0};
-    double tolerancia, lambdaAnterior = 0, lambdaNuevo = 0;
-    int iteraciones, i, j, k;
+    double vectorInicial[MAX_SIZE], vectorNuevo[MAX_SIZE];
+    double tolerancia, lambdaAnterior, lambdaNuevo;
+    int iteraciones, k, i, j;
 
-    printf("Introduce el número máximo de iteraciones: ");
+    printf("Introduce el numero maximo de iteraciones: ");
     scanf("%d", &iteraciones);
     printf("Introduce la tolerancia: ");
     scanf("%lf", &tolerancia);
 
-    // Valor propio dominante
+    // Inicializaci&oacute;n del vector inicial
+    for (i = 0; i < n; i++) {
+        vectorInicial[i] = 1; // Inicializamos con 1 en cada entrada
+    }
+
+    // Metodo de potencias para el valor propio maximo
+    lambdaAnterior = 0.0;
     for (k = 0; k < iteraciones; k++) {
+        // Multiplicacion matriz x vector
         for (i = 0; i < n; i++) {
-            vectorNuevo[i] = 0;
+            vectorNuevo[i] = 0.0;
             for (j = 0; j < n; j++) {
                 vectorNuevo[i] += matriz[i][j] * vectorInicial[j];
             }
         }
 
-        lambdaNuevo = fabs(vectorNuevo[0]);
-        for (i = 1; i < n; i++) {
+        // Calcular el valor propio aproximado
+        lambdaNuevo = 0.0;
+        for (i = 0; i < n; i++) {
             if (fabs(vectorNuevo[i]) > lambdaNuevo) {
                 lambdaNuevo = fabs(vectorNuevo[i]);
             }
         }
 
+        // Normalizar el vector
         for (i = 0; i < n; i++) {
             vectorNuevo[i] /= lambdaNuevo;
         }
 
+        // Verificar convergencia
         if (fabs(lambdaNuevo - lambdaAnterior) < tolerancia) {
-            printf("\nConvergencia alcanzada en %d iteraciones.\n", k + 1);
             break;
         }
 
+        // Actualizar valores para la pr&oacute;xima iteraci&oacute;n
+        lambdaAnterior = lambdaNuevo;
         for (i = 0; i < n; i++) {
             vectorInicial[i] = vectorNuevo[i];
         }
-
-        lambdaAnterior = lambdaNuevo;
     }
 
-    printf("\nValor propio dominante: %.6lf\n", lambdaNuevo);
-    printf("Vector propio asociado:\n");
+    printf("\nValor propio maximo: %.6lf\n", lambdaNuevo);
+    printf("Vector propio asociado (maximo):\n");
     for (i = 0; i < n; i++) {
         printf("x%d = %.6lf\n", i + 1, vectorNuevo[i]);
     }
 
-    // Valor propio mínimo
-    inversaMatriz();
+    // Metodo de potencias inverso para el valor propio minimo
+    inversaMatriz(); // Calculamos la inversa de la matriz
+
+    // Reinicializar para el metodo inverso
     for (i = 0; i < n; i++) {
-        vectorInicial[i] = 1;
-        vectorNuevo[i] = 0;
+        vectorInicial[i] = 1; // Reestablecemos el vector inicial
     }
-    lambdaAnterior = 0;
-    lambdaNuevo = 0;
+    lambdaAnterior = 0.0;
 
     for (k = 0; k < iteraciones; k++) {
+        // Multiplicacion matriz inversa x vector
         for (i = 0; i < n; i++) {
-            vectorNuevo[i] = 0;
+            vectorNuevo[i] = 0.0;
             for (j = 0; j < n; j++) {
                 vectorNuevo[i] += inversa[i][j] * vectorInicial[j];
             }
         }
 
-        lambdaNuevo = fabs(vectorNuevo[0]);
-        for (i = 1; i < n; i++) {
+        // Calcular el valor propio aproximado
+        lambdaNuevo = 0.0;
+        for (i = 0; i < n; i++) {
             if (fabs(vectorNuevo[i]) > lambdaNuevo) {
                 lambdaNuevo = fabs(vectorNuevo[i]);
             }
         }
 
+        // Normalizar el vector
         for (i = 0; i < n; i++) {
             vectorNuevo[i] /= lambdaNuevo;
         }
 
+        // Verificar convergencia
         if (fabs(lambdaNuevo - lambdaAnterior) < tolerancia) {
-            printf("\nConvergencia alcanzada en %d iteraciones.\n", k + 1);
             break;
         }
 
+        // Actualizar valores para la pr&oacute;xima iteraci&oacute;n
+        lambdaAnterior = lambdaNuevo;
         for (i = 0; i < n; i++) {
             vectorInicial[i] = vectorNuevo[i];
         }
-
-        lambdaAnterior = lambdaNuevo;
     }
 
-    printf("\nValor propio mínimo: %.6lf\n", 1 / lambdaNuevo);
-    printf("Vector propio asociado:\n");
+    printf("\nValor propio minimo: %.6lf\n", 1.0 / lambdaNuevo);
+    printf("Vector propio asociado (minimo):\n");
     for (i = 0; i < n; i++) {
         printf("x%d = %.6lf\n", i + 1, vectorNuevo[i]);
     }
