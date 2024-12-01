@@ -258,10 +258,7 @@ int main() {
             } else {
                 cout << "Metodo invalido.\n";
             }
-            cout << "Presione Enter para continuar...";
-            cin.ignore();
-            cin.get();
-            break;
+            
         }
         case 2: {
             leerMatriz();
@@ -308,7 +305,10 @@ int main() {
             cout << "Opcion invalida.\n";
             break;
     }
-
+cout << "Presione Enter para continuar...";
+            cin.ignore();
+            cin.get();
+            break;
     return 0;
 }
 
