@@ -427,16 +427,21 @@ void resolverSistema() {
 void resolverPorJacobi() {
     double x_anterior[MAX_SIZE] = {0};
     double x_nuevo[MAX_SIZE] = {0};
-    int iteraciones = 0;
+    int iteracionesMax, iteraciones = 0;
     int i, j;
     double tolerancia;
 
+    // Solicitar la tolerancia
     printf("Introduce la tolerancia: ");
     scanf("%lf", &tolerancia);
 
-    printf("Iterando con el metodo de Jacobi...\n");
+    // Solicitar el número máximo de iteraciones
+    printf("Introduce el número máximo de iteraciones: ");
+    scanf("%d", &iteracionesMax);
 
-    while (iteraciones < MAX_ITERACIONES) {
+    printf("Iterando con el método de Jacobi...\n");
+
+    while (iteraciones < iteracionesMax) {
         int converge = 1;
 
         for (i = 0; i < n; i++) {
@@ -460,7 +465,7 @@ void resolverPorJacobi() {
         iteraciones++;
 
         if (converge) {
-            printf("Solucion encontrada en %d iteraciones:\n", iteraciones);
+            printf("Solución encontrada en %d iteraciones:\n", iteraciones);
             for (i = 0; i < n; i++) {
                 printf("x%d = %.6lf\n", i + 1, x_nuevo[i]);
             }
@@ -468,7 +473,7 @@ void resolverPorJacobi() {
         }
     }
 
-    printf("El metodo de Jacobi no converge despues de %d iteraciones.\n", MAX_ITERACIONES);
+    printf("El método de Jacobi no converge después de %d iteraciones.\n", iteracionesMax);
 }
 
 void inversaMatriz(){
